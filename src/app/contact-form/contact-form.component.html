@@ -1,17 +1,29 @@
 <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)"> <!-- let contactForm = new NgForm()-->
   <p>
     <label for="firstname">Nombres</label>
-    <input type="text" id="firstname" name="firstname" [(ngModel)]="contact.firstname">
+    <input type="text" id="firstname" name="firstname" #fname="ngModel" [(ngModel)]="contact.firstname"
+    minlength="5" required>
+    <span>
+      <div *ngIf="!fname?.valid && (fname?.dirty || fname?.touched)">
+        nombre es invalido
+        <div *ngIf="fname.errors.required">
+           nombre is required
+        </div>
+        <div *ngIf="fname.errors.minlength">
+           {{fname.errors.minlength?.requiredLength}}
+        </div>
+      </div>
+    </span>
   </p>
- 
+  
   <p>
     <label for="lastname">Apellidos</label>
-    <input type="text" id="lastname" name="lastname" [(ngModel)]="contact.lastname">
+    <input type="text" id="lastname" name="lastname" #lname="ngModel" [(ngModel)]="contact.lastname">
   </p>
  
   <p>
     <label for="email">Email </label>
-    <input type="email" id="email" name="email" [(ngModel)]="contact.email">
+    <input type="email" id="email" name="email" #email="ngModel" [(ngModel)]="contact.email">
   </p>
  
   <p>
@@ -52,13 +64,49 @@
   </div>
 
   <p>
-    <button type="submit">Guardar</button>
+    <button type="submit" [disabled]="!contactForm.valid">Guardar</button>
   </p>
+
+  <p> <button (click)="resetForm(contactForm)">Limpiar</button></p>
 </form>
+<div>
+  <tr *ngFor="let contactItem of contacList">
+    <td> {{ contactItem.firstname }}</td>
+  </tr>
+</div>
 
 <div>
   <h2>Valores del formulario</h2>
   <pre>
     {{ contactForm.value | json }} <!-- json(contactForm.value)-->
   </pre>
+  <pre>
+    contactForm.valid: {{ contactForm.valid }}
+  </pre>
+
+  <pre>
+    contactForm.touched: {{ contactForm.touched }}
+  </pre>
+
+  <pre>
+    contactForm.submitted: {{ contactForm.submitted  }}
+  </pre>
+
+  <p>Nombre: {{ contactForm.value.firstname }}</p>
+  <p>Nombre desde variable: {{ fname.value }}
+  <pre>
+    valid: {{ fname.valid }}
+  </pre>
+
+  <pre>
+    invalid: {{ fname.invalid }}
+  </pre> 
+
+  <pre>
+    touched: {{ fname.touched }}
+  </pre>
+
+  <pre>
+    dirty: {{ fname.dirty }}
+  </pre> 
 </div>

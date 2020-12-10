@@ -13,10 +13,11 @@ export class ContactFormComponent implements OnInit {
 
   countryList: Country[] = COUNTRY;
   contact: ContactForm;
+  contacList: ContactForm[] = [];
   constructor() { }
 
   ngOnInit(): void {
-    this.contact = new ContactForm(
+    this.contact = this.createContactForm(
       "Jose Carlos",
       "Ramirez Tello",
       "jcramirez@gmail.com",
@@ -29,8 +30,44 @@ export class ContactFormComponent implements OnInit {
     )
   }
 
-  onSubmit(contactForm: NgForm): void {
-    console.log(contactForm.value);
+  createContactForm(firstname: string,
+    lastname: string,
+    email: string,
+    gender: string,
+    isMarried: boolean,
+    country: number,
+    city: string,
+    street: string,
+    pincode: string): ContactForm {
+      return new ContactForm(
+        firstname,
+        lastname,
+        email,
+        gender,
+        isMarried,
+        country,
+        city,
+        street,
+        pincode
+      )
   }
 
+  onSubmit(contactForm: NgForm): void {
+    const contact: ContactForm = this.createContactForm(
+      contactForm.value.firstname,
+      contactForm.value.lastname,
+      contactForm.value.email,
+      contactForm.value.gender,
+      contactForm.value.isMarried,
+      contactForm.value.country,
+      contactForm.value.address.city,
+      contactForm.value.address.street,
+      contactForm.value.address.pincode
+    )
+    this.contacList.push(contact);
+  }
+
+  resetForm(contactForm: NgForm): void {
+    contactForm.resetForm();
+  }
 }
